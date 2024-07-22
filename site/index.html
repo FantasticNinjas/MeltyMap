@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="x-shader/x-vertex" id="vertex-shader">
+            #version 300 es
+
+            in vec4 in_position
+
+            void main() {
+                gl_Position = in_position
+            }
+
+        </script>
+
+        <script type="x-shader/x-fragment" id="fragment-shader">
+            #version 300 es
+
+            precision highp float;
+
+            out vec4 out_color
+
+            void main() {
+                outColor = vec4(1, 0, 0.5, 1);
+            }
+
+        </script>
+
+        <style>
+            body {
+                margin: 0;
+            }
+
+            #map_canvas {
+                width: 500px;
+                height: 250px;
+            }
+        </style>
+    </head>
+
+    <body>
+
+
+
+        <canvas id="map_canvas"></canvas>
+
+        <script>
+
+            main()
+
+            function main() {
+                // Get the WebGL Context
+
+                var canvas = document.querySelector("#map_canvas");
+                var gl = canvas.getContext("webgl2");
+                if (!gl) {
+                    console.log("Unable to initialize WebGL. Your browser or machine may not support it.");
+                    return;
+                }
+
+                gl.clearColor(0, 0, 0, 1);
+                gl.clear(gl.COLOR_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
+
+                // Resize the drawing buffer to match the display size
+
+                const resizeObserver = new ResizeObserver((entries) => {
+                    for (const entry of entries) {
+                        let width;
+                        let height;
+                        if (entry.devicePixelContentBoxSize) {
+                            width = entry.devicePixelContentBoxSize[0].inlineSize;
+                            height = entry.devicePixelContentBoxSize[0].blockSize;
+                        } else {
+                            let dpr = window.devicePixelRatio;
+                            width = entry.contentBoxSize[0].inlineSize * dpr;
+                            height = entry.contentBoxSize[0].blockSize * dpr;
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        gl.viewport(0, 0, width, height);
+                        gl.clear(gl.COLOR_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
+                    }
+                });
+
+                try {
+                    resizeObserver.observe(canvas, { box: 'device-pixel-content-box' });
+                } catch {
+                    resizeObserver.observe(canvas, { box: 'content-box' });
+                }
+
+            }
+
+            
+        </script>
+
+    </body>
+
+</html>
